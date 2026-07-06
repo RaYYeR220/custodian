@@ -1,0 +1,20 @@
+{
+  "name": "custodian-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Custodian autonomous RWA asset-manager agent — pays x402 for data, reasons with Gemini via OpenRouter, acts on-chain through the custodian-mcp server",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dry": "node dist/index.js --dry-run",
+    "test": "node --test dist/*.test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.6.0"
+  }
+}

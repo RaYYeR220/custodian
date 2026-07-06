@@ -1,0 +1,35 @@
+# Secrets & keys — NEVER commit
+.keys/
+*.pem
+.env
+**/.env
+!.env.template
+.env.local
+secrets.env
+
+# Local tooling binaries (downloaded wasm-opt/wasm-strip)
+.tools/
+
+# Cloned reference repos (not ours)
+.reference/
+
+# Rust / Odra build artifacts + vendored wasm
+target/
+**/target/
+*.wasm
+custodian-contracts/wasm/
+
+# Deployed-address scratch outputs
+x402/deployer/token_package.txt
+
+# Node
+node_modules/
+
+# Browser automation artifacts (Playwright MCP screenshots/snapshots)
+.playwright-mcp/
+**/.playwright-mcp/
+
+# OS / editor
+Thumbs.db
+.DS_Store
+*.swp

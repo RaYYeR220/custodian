@@ -1,0 +1,6 @@
+last_updated = "2026-06-16T20:42:11Z"
+
+[[contracts]]
+name = "Custodian"
+package_name = "Custodian"
+package_hash = "hash-9342311dc3d948ee673d06942cfcec5935e844a2687df27e8af5d7f7ba7cde02"

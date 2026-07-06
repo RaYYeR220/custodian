@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Custodian — Autonomous RWA Asset Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">◆</div>
+        <div>
+          <h1>Custodian</h1>
+          <p class="tagline">Autonomous RWA asset manager · Casper testnet · x402 · Gemini</p>
+        </div>
+      </div>
+      <div class="controls">
+        <select id="runSelect" title="Select a run"></select>
+        <button id="replayBtn" class="btn primary">▶ Replay</button>
+        <button id="allBtn" class="btn">Show all</button>
+        <label class="live"><input type="checkbox" id="liveToggle" /> Live</label>
+      </div>
+    </header>
+
+    <div id="simBanner" class="sim-banner hidden">
+      Simulated run (dry-run) — tx hashes are illustrative and won't resolve on cspr.live. A live testnet run produces real, clickable transactions.
+    </div>
+
+    <main class="grid">
+      <!-- Shipment card -->
+      <section class="card shipment">
+        <div class="card-head">
+          <span class="eyebrow">Tokenized shipment</span>
+          <span id="statusPill" class="pill">—</span>
+        </div>
+        <h2 id="metadata">—</h2>
+
+        <div class="route">
+          <span class="port">Santos 🇧🇷</span>
+          <div class="route-line"><div id="routeDot" class="route-dot"></div></div>
+          <span class="port">Rotterdam 🇳🇱</span>
+        </div>
+
+        <div class="metrics">
+          <div class="metric big">
+            <span class="label">Appraised value</span>
+            <span class="value"><span id="appraised">0.000</span> <em>CSPR</em></span>
+          </div>
+          <div class="metric">
+            <span class="label">Condition</span>
+            <span class="value"><span id="condition">100</span><em>/100</em></span>
+            <div class="bar"><div id="conditionBar" class="bar-fill"></div></div>
+          </div>
+          <div class="metric">
+            <span class="label">Escrow</span>
+            <span class="value"><span id="escrow">0.000</span> <em>CSPR</em></span>
+          </div>
+          <div class="metric">
+            <span class="label">Tick</span>
+            <span class="value"><span id="tick">—</span><em>/7</em></span>
+          </div>
+        </div>
+
+        <div id="reading" class="reading">
+          <span class="reading-label">Latest reading</span>
+          <span id="readingText" class="reading-text">awaiting telemetry…</span>
+        </div>
+
+        <div class="lifecycle">
+          <span class="step" data-step="InTransit">In transit</span>
+          <span class="step" data-step="Delivered">Delivered</span>
+          <span class="step" data-step="Lost">Lost</span>
+          <span class="step" data-step="Settled">Settled</span>
+        </div>
+      </section>
+
+      <!-- x402 spend -->
+      <section class="card spend">
+        <span class="eyebrow">x402 data acquisition</span>
+        <div class="spend-num"><span id="spend">0.0</span> <em>X402</em></div>
+        <div class="spend-sub"><span id="payCount">0</span> micropayments settled on testnet</div>
+        <div class="spend-foot">The agent pays per data call — temperature, GPS, customs, price.</div>
+      </section>
+
+      <!-- Activity log -->
+      <section class="card log">
+        <div class="card-head">
+          <span class="eyebrow">Activity log</span>
+          <span class="hint">pay → reason → act</span>
+        </div>
+        <div id="logList" class="log-list"></div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span id="runId">—</span>
+      <span>Custodian · Casper Agentic Buildathon</span>
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

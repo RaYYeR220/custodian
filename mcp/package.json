@@ -1,0 +1,23 @@
+{
+  "name": "custodian-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Custodian MCP server — exposes the Casper Custodian contract + x402 data feeds as agent tools",
+  "type": "module",
+  "bin": {
+    "custodian-mcp": "dist/server.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test:client": "node dist/test-client.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.6.0"
+  }
+}

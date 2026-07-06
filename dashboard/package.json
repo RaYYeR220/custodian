@@ -1,0 +1,10 @@
+{
+  "name": "custodian-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Custodian demo dashboard — renders an agent run (shipment card, activity log with cspr.live tx links, x402 spend counter) from agent/runs/*.jsonl",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  typescript:
+    name: TypeScript (${{ matrix.pkg }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pkg: [agent, mcp]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ matrix.pkg }}/package-lock.json
+
+      - name: Install
+        run: npm ci
+        working-directory: ${{ matrix.pkg }}
+
+      - name: Build
+        run: npm run build
+        working-directory: ${{ matrix.pkg }}
+
+      - name: Test
+        if: matrix.pkg == 'agent'
+        run: npm test
+        working-directory: ${{ matrix.pkg }}

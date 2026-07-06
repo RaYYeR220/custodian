@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # TypeScript stacks
+  - package-ecosystem: "npm"
+    directory: "/agent"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "npm"
+    directory: "/mcp"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  # Go x402 feed server + facilitator
+  - package-ecosystem: "gomod"
+    directory: "/x402/feeds"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  # Rust / Odra contracts
+  - package-ecosystem: "cargo"
+    directory: "/custodian-contracts"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
