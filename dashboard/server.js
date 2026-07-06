@@ -105,7 +105,9 @@ const server = createServer(async (req, res) => {
 
     return serveStatic(res, p);
   } catch (e) {
-    sendJson(res, 500, { error: e instanceof Error ? e.message : String(e) });
+    // Log the detail server-side; return a generic message (don't leak internals).
+    console.error("server error:", e);
+    sendJson(res, 500, { error: "internal server error" });
   }
 });
 

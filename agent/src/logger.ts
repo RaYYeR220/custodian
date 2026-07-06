@@ -17,7 +17,10 @@ export class RunLogger {
     this.runId = runId;
     const dir = resolve(AGENT_DIR, "runs");
     mkdirSync(dir, { recursive: true });
-    this.file = resolve(dir, `${runId}.jsonl`);
+    // The run id is built from CLI args — sanitize to a bare filename so it can
+    // never influence the path outside the runs dir.
+    const safe = runId.replace(/[^A-Za-z0-9._-]/g, "-");
+    this.file = resolve(dir, `${safe}.jsonl`);
   }
 
   /** Record one event. `ts` is the real timestamp the caller stamps. */
