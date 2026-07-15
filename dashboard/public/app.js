@@ -270,8 +270,27 @@ async function replay(events) {
 // ---------------------------------------------------------------------------
 // Data loading
 // ---------------------------------------------------------------------------
+// Source order: locally (npm start) prefer the live server API; on a static host
+// (GitHub Pages, etc.) prefer the bundled snapshot first — so neither environment
+// logs a 404 for the source it doesn't have.
+const IS_LOCAL = /^(localhost|127\.0\.0\.1|\[::1\]|)$/.test(location.hostname);
+const src = (api, stat) => (IS_LOCAL ? [api, stat] : [stat, api]);
+
+// Fetch the first URL that responds OK. Lets the dashboard work both live
+// (server API at /api/*) and as a fully static build (bundled ./data/*.json on
+// GitHub Pages / any static host).
+async function getJson(urls) {
+  for (const u of urls) {
+    try {
+      const r = await fetch(u);
+      if (r.ok) return await r.json();
+    } catch { /* try next */ }
+  }
+  return null;
+}
+
 async function loadRunList() {
-  const runs = await fetch("/api/runs").then((r) => r.json());
+  const runs = (await getJson(src("/api/runs", "./data/runs.json"))) || [];
   els.runSelect.innerHTML = "";
   for (const r of runs) {
     const o = document.createElement("option");
@@ -282,8 +301,10 @@ async function loadRunList() {
 }
 
 async function loadRun(id, mode = "all") {
-  const data = await fetch(`/api/run?id=${encodeURIComponent(id)}`).then((r) => r.json());
-  if (data.error) return;
+  const data = await getJson(
+    src(`/api/run?id=${encodeURIComponent(id)}`, `./data/run-${encodeURIComponent(id)}.json`)
+  );
+  if (!data || data.error) return;
   runIdCur = data.id; simulated = /^dry/.test(data.id);
   els.simBanner.classList.toggle("hidden", !simulated);
   els.runId.textContent = data.id;
@@ -294,8 +315,8 @@ async function loadRun(id, mode = "all") {
 
 async function pollLive() {
   try {
-    const latest = await fetch("/api/run/latest").then((r) => r.json());
-    if (latest.error) return;
+    const latest = await getJson(src("/api/run/latest", "./data/latest.json"));
+    if (!latest || latest.error) return;
     if (latest.id !== runIdCur) { // a newer run started
       runIdCur = latest.id; simulated = /^dry/.test(latest.id);
       els.simBanner.classList.toggle("hidden", !simulated);

@@ -6,7 +6,9 @@
 >
 > **pay x402 micropayments for real-world data → reason (Gemini + MCP) → act on-chain (Odra).**
 
-**▶ Demo video:** https://youtu.be/9-1nvBxj_3s
+**🌐 Live demo:** https://rayyer220.github.io/custodian/ &nbsp;·&nbsp; **▶ Demo video:** https://youtu.be/9-1nvBxj_3s
+
+The live demo replays an actual autonomous testnet run — every on-chain action links to `testnet.cspr.live`.
 
 A coffee container is tokenized on Casper (its value held in escrow, shares to
 investors). As it sails Santos → Rotterdam, the agent **pays per data call** for
