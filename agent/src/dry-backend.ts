@@ -227,7 +227,9 @@ export class DryBackend implements Backend {
       case "pay_for_telemetry": {
         const shipment = String(a.shipment ?? "0");
         const tx = this.fakeTx(`telemetry:${shipment}:${tick}`);
-        if (shipment === "loss") {
+        // Loss variant: nominal early, then telemetry+GPS go silent from tick 3
+        // (cargo lost mid-voyage) — a realistic "was fine, then went dark" arc.
+        if (shipment === "loss" && tick >= 3) {
           return {
             status: 200,
             tx,

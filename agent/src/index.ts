@@ -24,6 +24,7 @@ interface Args {
   tickStart: number;
   tickEnd: number;
   maxSteps?: number;
+  scenario?: string; // e.g. "loss" — exercise the silent-telemetry / insurance branch
 }
 
 function parseArgs(argv: string[]): Args {
@@ -38,6 +39,7 @@ function parseArgs(argv: string[]): Args {
     if (arg === "--dry-run") a.dryRun = true;
     else if (arg === "--shipment") a.shipment = Number(argv[++i]);
     else if (arg === "--max-steps") a.maxSteps = Number(argv[++i]);
+    else if (arg === "--scenario") a.scenario = argv[++i];
     else if (arg === "--ticks") {
       const [lo, hi] = argv[++i].split("-").map(Number);
       a.tickStart = lo;
@@ -49,7 +51,8 @@ function parseArgs(argv: string[]): Args {
 
 function runId(args: Args): string {
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  return `${args.dryRun ? "dry" : "live"}-ship${args.shipment}-${stamp}`;
+  const tag = args.scenario ? `-${args.scenario}` : "";
+  return `${args.dryRun ? "dry" : "live"}${tag}-ship${args.shipment}-${stamp}`;
 }
 
 async function main(): Promise<void> {
@@ -79,6 +82,7 @@ async function main(): Promise<void> {
       tickStart: args.tickStart,
       tickEnd: args.tickEnd,
       maxSteps: args.maxSteps,
+      feedShipment: args.scenario === "loss" ? "loss" : undefined,
     });
     console.error(`\nFinished. Final status: ${status}`);
   } catch (e) {

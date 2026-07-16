@@ -35,20 +35,23 @@ export interface RunOpts {
   tickStart: number;
   tickEnd: number;
   maxSteps?: number;
+  /** Shipment key passed to the x402 feed tools (default String(shipment);
+   *  set to "loss" to exercise the silent-telemetry / insurance branch). */
+  feedShipment?: string;
   /** Injectable LLM (defaults to the real OpenRouter chat). */
   chatFn?: ChatFn;
   /** Injectable clock (defaults to wall time). */
   now?: () => string;
 }
 
-function buildSystemPrompt(shipment: number): string {
+function buildSystemPrompt(shipment: number, feedShipment: string): string {
   const skill = loadSkill();
   return (
     skill +
     "\n\n---\n\n## Autonomous operating context\n\n" +
     `You are running fully autonomously (no human in the loop) as the operator of shipment id ${shipment}. ` +
     "Work one journey tick at a time. At each tick:\n" +
-    `1. Pay for the data you need via the feed tools (telemetry + customs every tick; price (commodity='${COMMODITY}') when a market check is useful). Pass shipment id as a string and the current tick number.\n` +
+    `1. Pay for the data you need via the feed tools (telemetry + customs every tick; price (commodity='${COMMODITY}') when a market check is useful). For these feed tools pass shipment="${feedShipment}" and the current tick number.\n` +
     `2. After EACH pay_for_* call, record the cost on-chain with record_data_spend(id=${shipment}, amount="${PER_FEED_SPEND}").\n` +
     "3. Read the relevant on-chain state if needed, reason over the readings + the decision rules above, and take exactly the warranted on-chain action(s) — no more, no less.\n" +
     "4. Finish the tick by replying with a one-line summary and NO tool call.\n\n" +
@@ -60,12 +63,13 @@ function buildSystemPrompt(shipment: number): string {
 export async function runAgent(opts: RunOpts): Promise<string> {
   const { backend, logger, shipment } = opts;
   const maxSteps = opts.maxSteps ?? MAX_STEPS_PER_TICK;
+  const feedShipment = opts.feedShipment ?? String(shipment);
   const chatFn: ChatFn = opts.chatFn ?? ((m, t) => chat(m, t));
   const now = opts.now ?? (() => new Date().toISOString());
 
   const tools = await backend.tools();
   const messages: ChatMessage[] = [
-    { role: "system", content: buildSystemPrompt(shipment) },
+    { role: "system", content: buildSystemPrompt(shipment, feedShipment) },
   ];
 
   const initial = await readShipment(backend, shipment);

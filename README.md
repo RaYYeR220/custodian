@@ -120,10 +120,26 @@ Chain `casper-test`, RPC `https://node.testnet.casper.network/rpc`.
 
 See the full run in the [demo video](https://youtu.be/9-1nvBxj_3s).
 
+## Built on the Casper AI Toolkit
+
+Custodian uses the Casper agentic stack end to end: **x402** micropayments for the
+data loop, an **MCP server** + **Agent Skill** (`mcp/SKILL.md`) as the agent's tool
+surface, and the **Odra** framework for the contract — the components Casper ships
+for autonomous, on-chain applications.
+
 ## Status
 
 All five layers built, committed, and proven **end-to-end on Casper testnet**:
 the agent autonomously took a tokenized shipment from `InTransit` to `Settled` —
 paying real x402 micropayments for data and submitting real `Custodian`
 transactions (revalue on the cold-chain breach → customs → deliver → distribute),
-**25 real testnet transactions** in one run (see the ledger above).
+**25 real testnet transactions** in one run (see the ledger above). The
+[live demo](https://rayyer220.github.io/custodian/) also replays the loss →
+insurance branch.
+
+## Roadmap & launch
+
+This is a working prototype with a plan to become a real product — stablecoin
+settlement, real data-provider adapters, mainnet + audit, an agent fleet, and an
+RWA financial layer (lending against managed cargo). Full plan, business model,
+and go-to-market: **[`ROADMAP.md`](ROADMAP.md)**.
