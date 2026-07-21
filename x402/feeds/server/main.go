@@ -149,15 +149,32 @@ func main() {
 		}
 
 		row := telemetryJourney[clampTick(tick, len(telemetryJourney))]
+
+		// ?live=1 makes this a REAL data feed: pay the x402 micropayment and get
+		// the genuine current temperature at the cargo's coordinates from
+		// Open-Meteo (free, no key). Falls back to the scripted journey if the
+		// upstream is unreachable, so the demo stays deterministic and offline-safe.
+		tempC := row.TempC
+		note := row.Note
+		source := "scripted"
+		if c.Query("live") == "1" {
+			if t, ok := realTemperature(row.Lat, row.Lon); ok {
+				tempC = t
+				note = row.Note + " (live temp via open-meteo)"
+				source = "open-meteo"
+			}
+		}
+
 		c.JSON(http.StatusOK, ginfw.H{
 			"shipment": shipment,
 			"tick":     tick,
 			"lost":     false,
-			"temp_c":   row.TempC,
+			"temp_c":   tempC,
 			"humidity": row.Humidity,
 			"lat":      row.Lat,
 			"lon":      row.Lon,
-			"note":     row.Note,
+			"note":     note,
+			"source":   source,
 			"ts":       tickTime(tick),
 		})
 	})

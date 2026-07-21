@@ -38,6 +38,8 @@ export interface RunOpts {
   /** Shipment key passed to the x402 feed tools (default String(shipment);
    *  set to "loss" to exercise the silent-telemetry / insurance branch). */
   feedShipment?: string;
+  /** Optional extra instruction appended to every tick prompt (used by the eval). */
+  tickHint?: string;
   /** Injectable LLM (defaults to the real OpenRouter chat). */
   chatFn?: ChatFn;
   /** Injectable clock (defaults to wall time). */
@@ -89,7 +91,8 @@ export async function runAgent(opts: RunOpts): Promise<string> {
       content:
         `Tick ${tick}. Acquire the data you need for shipment ${shipment} at this tick, ` +
         "reason over it and the current on-chain state, and take the appropriate on-chain action(s). " +
-        "When done, reply with a one-line summary and stop.",
+        "When done, reply with a one-line summary and stop." +
+        (opts.tickHint ? " " + opts.tickHint : ""),
     });
 
     for (let step = 0; step < maxSteps; step++) {

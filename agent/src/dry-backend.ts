@@ -174,13 +174,24 @@ function fn(
   };
 }
 
+export interface DryOpts {
+  /** Multiplier applied to the price feed — >1 simulates a material market move. */
+  priceSpike?: number;
+  /** Apply the spike only from this tick on (so the feed shows a JUMP, not a flat level). */
+  priceSpikeFromTick?: number;
+}
+
 /** In-memory backend: same tools + behaviour as the live MCP, no I/O. */
 export class DryBackend implements Backend {
   private ships = new Map<number, SimShipment>();
   private seq = 0;
+  private priceSpike: number;
+  private priceSpikeFromTick: number;
 
-  constructor(ids: number[] = [0]) {
+  constructor(ids: number[] = [0], opts: DryOpts = {}) {
     for (const id of ids) this.ships.set(id, demoShipment(id));
+    this.priceSpike = opts.priceSpike ?? 1;
+    this.priceSpikeFromTick = opts.priceSpikeFromTick ?? 0;
   }
 
   async tools(): Promise<ToolDef[]> {
@@ -241,7 +252,8 @@ export class DryBackend implements Backend {
       }
       case "pay_for_price": {
         const commodity = String(a.commodity ?? "coffee");
-        const price = PRICE[clampTick(tick, PRICE.length)];
+        const mult = tick >= this.priceSpikeFromTick ? this.priceSpike : 1;
+        const price = Math.round(PRICE[clampTick(tick, PRICE.length)] * mult);
         return {
           status: 200,
           tx: this.fakeTx(`price:${commodity}:${tick}`),

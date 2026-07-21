@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dry": "node dist/index.js --dry-run",
+    "eval": "node dist/eval/run-eval.js",
     "test": "node --test dist/*.test.js"
   },
   "dependencies": {

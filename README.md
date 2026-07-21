@@ -6,7 +6,7 @@
 >
 > **pay x402 micropayments for real-world data → reason (Gemini + MCP) → act on-chain (Odra).**
 
-**🌐 Live demo:** https://rayyer220.github.io/custodian/ &nbsp;·&nbsp; **▶ Demo video:** https://youtu.be/9-1nvBxj_3s
+**🌐 Live demo:** https://rayyer220.github.io/custodian/ &nbsp;·&nbsp; **▶ Demo video:** https://youtu.be/9-1nvBxj_3s &nbsp;·&nbsp; **👀 Reviewing? → [`JUDGES.md`](JUDGES.md)**
 
 The live demo replays an actual autonomous testnet run — every on-chain action links to `testnet.cspr.live`.
 
@@ -136,6 +136,12 @@ transactions (revalue on the cold-chain breach → customs → deliver → distr
 **25 real testnet transactions** in one run (see the ledger above). The
 [live demo](https://rayyer220.github.io/custodian/) also replays the loss →
 insurance branch.
+
+**The agent's judgment is graded.** A decision eval runs the real reasoning model
+over six situations (nominal, cold-chain breach, market move, customs, delivery,
+loss) and scores the on-chain action it chooses against a hidden answer key —
+**6/6 correct, no wrong action** (see [`EVAL.md`](EVAL.md); reproduce with
+`cd agent && npm run eval`).
 
 ## Roadmap & launch
 

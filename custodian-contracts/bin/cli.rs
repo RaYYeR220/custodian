@@ -7,6 +7,8 @@
 use custodian_contracts::custodian::{Custodian, CustodianInitArgs};
 use odra::casper_types::U512;
 use odra::host::{HostEnv, HostRef};
+use odra::prelude::Address;
+use std::str::FromStr;
 use odra_cli::{
     deploy::DeployScript,
     scenario::{Args, Error, Scenario, ScenarioMetadata},
@@ -72,12 +74,56 @@ impl ScenarioMetadata for TokenizeDemoScenario {
         "Tokenize a demo shipment (5 CSPR escrow, deployer as sole holder)";
 }
 
+/// Tokenizes a shipment with TWO investor holders (60% / 40%) so `distribute`
+/// pays proceeds pro-rata to multiple investors on-chain (fractional RWA shares).
+pub struct TokenizeMultiScenario;
+
+impl Scenario for TokenizeMultiScenario {
+    fn args(&self) -> Vec<CommandArg> {
+        vec![]
+    }
+
+    fn run(
+        &self,
+        env: &HostEnv,
+        container: &DeployedContractsContainer,
+        _args: Args,
+    ) -> Result<(), Error> {
+        let me = env.get_account(0);
+        // Second investor: the demo payee account (a real testnet account-hash).
+        let payee = Address::from_str(
+            "hash-eb46ac01d8757f8e09b9fc454aa90ffeb9fc54a267b9775bc4bfa81ee09a4c67",
+        )
+        .expect("valid payee address");
+        let mut custodian = container.contract_ref::<Custodian>(env)?;
+        env.set_gas(10_000_000_000);
+        custodian
+            .with_tokens(U512::from(5_000_000_000u64)) // 5 CSPR escrow
+            .try_tokenize_shipment(
+                "DEMO Coffee Santos->Rotterdam (2 investors)".to_string(),
+                U512::from(1000u64),
+                U512::from(5_000_000u64),
+                U512::from(4_000_000_000u64), // insurance 4 CSPR
+                vec![me, payee],
+                vec![U512::from(60u64), U512::from(40u64)], // 60% / 40%
+            )?;
+        Ok(())
+    }
+}
+
+impl ScenarioMetadata for TokenizeMultiScenario {
+    const NAME: &'static str = "tokenize-multi";
+    const DESCRIPTION: &'static str =
+        "Tokenize a demo shipment with 2 investor holders (60% / 40%)";
+}
+
 pub fn main() {
     OdraCli::new()
         .about("Custodian deploy + scenarios")
         .deploy(CustodianDeployScript)
         .contract::<Custodian>()
         .scenario(TokenizeDemoScenario)
+        .scenario(TokenizeMultiScenario)
         .build()
         .run();
 }

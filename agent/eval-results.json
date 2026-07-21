@@ -1,0 +1,90 @@
+{
+  "model": "google/gemini-3-flash-preview",
+  "stamp": "2026-07-21",
+  "passed": 6,
+  "total": 6,
+  "results": [
+    {
+      "id": "nominal",
+      "title": "Nominal transit",
+      "situation": "Telemetry ~18 °C mid-voyage, no customs event — nothing is wrong.",
+      "expected": [],
+      "taken": [],
+      "missing": [],
+      "wrong": [],
+      "pass": true
+    },
+    {
+      "id": "breach",
+      "title": "Cold-chain breach",
+      "situation": "Telemetry spikes to 31.4 °C — the reefer failed, cargo degraded.",
+      "expected": [
+        "revalue"
+      ],
+      "taken": [
+        "revalue"
+      ],
+      "missing": [],
+      "wrong": [],
+      "pass": true
+    },
+    {
+      "id": "price-move",
+      "title": "Market price move",
+      "situation": "Coffee's market price jumps ~20% — the asset should be marked to market.",
+      "expected": [
+        "revalue"
+      ],
+      "taken": [
+        "revalue"
+      ],
+      "missing": [],
+      "wrong": [],
+      "pass": true
+    },
+    {
+      "id": "customs",
+      "title": "Held at customs",
+      "situation": "Cargo reaches Rotterdam customs, not yet cleared.",
+      "expected": [
+        "set_customs"
+      ],
+      "taken": [
+        "set_customs"
+      ],
+      "missing": [],
+      "wrong": [],
+      "pass": true
+    },
+    {
+      "id": "delivery",
+      "title": "Cleared + delivered",
+      "situation": "Customs cleared and the cargo has arrived at the destination.",
+      "expected": [
+        "confirm_delivery"
+      ],
+      "taken": [
+        "confirm_delivery",
+        "distribute"
+      ],
+      "missing": [],
+      "wrong": [],
+      "pass": true
+    },
+    {
+      "id": "loss",
+      "title": "Telemetry lost",
+      "situation": "Telemetry was nominal, then GPS + telemetry go silent — cargo presumed lost.",
+      "expected": [
+        "report_loss"
+      ],
+      "taken": [
+        "report_loss",
+        "trigger_insurance"
+      ],
+      "missing": [],
+      "wrong": [],
+      "pass": true
+    }
+  ]
+}
