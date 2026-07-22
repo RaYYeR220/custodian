@@ -108,6 +108,17 @@ Chain `casper-test`, RPC `https://node.testnet.casper.network/rpc`.
 - **Custodian contract package:** `9342311dc3d948ee673d06942cfcec5935e844a2687df27e8af5d7f7ba7cde02`
 - **X402 data-payment token (CEP-18):** `265ee18c6883e72c6a4ad5ea5a9486f727b57c741f7cd6203c29cbe72b0f59bd`
 
+**Fractional ownership settles pro-rata on-chain.** The live demo's default run
+manages a shipment owned by **two investors (60% / 40%)**: the agent distributed
+3.5 CSPR and the 40% investor's account holds exactly **1.4 CSPR**
+(`distribute` tx `d1db9e228583a39308614761a0483a17558324808e6609da126475b924b93f32`).
+
+**The data feed is real, not a mock.** `GET /telemetry?live=1` returns the live
+temperature at the cargo's coordinates from Open-Meteo behind the same x402
+paywall (proof settlement `69f2e45b12e7c2cc09f7eb98f295b6675d34b7c986ab1536c7078fb6e87aee8b`
+→ `{"temp_c":17.8,"source":"open-meteo"}`); the demo journey stays scripted so the
+narrative is reproducible.
+
 **Proven on testnet** — one autonomous live run, shipment `InTransit → Settled`,
 **25 real transactions** (`https://testnet.cspr.live/transaction/<hash>`):
 

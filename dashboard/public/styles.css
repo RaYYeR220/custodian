@@ -132,6 +132,7 @@ select { max-width: 320px; }
 .metric .value { font-family: var(--mono); font-size: 22px; font-weight: 600; margin-top: 6px; display: block; }
 .metric.big .value { font-size: 34px; color: var(--accent); }
 .metric .value em { font-style: normal; font-size: 13px; color: var(--muted); }
+.split { margin-top: 7px; font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.3px; }
 .bar { height: 6px; background: var(--line); border-radius: 6px; margin-top: 10px; overflow: hidden; }
 .bar-fill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--good), var(--accent)); transition: width 0.7s ease, background 0.4s; }
 .bar-fill.low { background: linear-gradient(90deg, var(--bad), var(--accent2)); }

@@ -15,6 +15,7 @@ const els = {
   simBanner: $("simBanner"), statusPill: $("statusPill"), metadata: $("metadata"),
   appraised: $("appraised"), condition: $("condition"), conditionBar: $("conditionBar"),
   escrow: $("escrow"), tick: $("tick"), routeDot: $("routeDot"),
+  investors: $("investors"), investorSplit: $("investorSplit"),
   reading: $("reading"), readingText: $("readingText"),
   spend: $("spend"), payCount: $("payCount"), spendNum: document.querySelector(".spend-num"),
   logList: $("logList"), runId: $("runId"),
@@ -29,7 +30,7 @@ let appliedSeq = 0; // for live tail-application
 // --- derived view state ---
 function freshView() {
   return { quantity: 1000, status: "—", appraised: "0", condition: "100", escrow: "0",
-    insurance: "0", tick: null, spend: 0, payCount: 0 };
+    insurance: "0", tick: null, spend: 0, payCount: 0, investors: 0, split: "" };
 }
 let view = freshView();
 
@@ -46,6 +47,16 @@ function applyEvent(e, animate) {
         view.condition = s.condition_score; view.escrow = s.escrow;
         view.insurance = s.insurance_coverage ?? "0";
         view.metadata = s.metadata;
+        // fractional ownership: shares are parallel to holders (e.g. 60 / 40)
+        const shares = String(s.shares ?? "").match(/\d+/g)?.map(Number) ?? [];
+        const total = shares.reduce((a, b) => a + b, 0);
+        view.investors = shares.length;
+        view.split =
+          shares.length > 1 && total > 0
+            ? shares.map((v) => Math.round((v / total) * 100) + "%").join(" · ")
+            : shares.length === 1
+              ? "100%"
+              : "";
       }
       renderCard();
       break;
@@ -125,6 +136,9 @@ function renderCard() {
   els.condition.textContent = cond;
   els.conditionBar.style.width = `${Math.max(0, Math.min(100, cond))}%`;
   els.conditionBar.classList.toggle("low", cond < 85);
+
+  els.investors.textContent = view.investors || "—";
+  els.investorSplit.textContent = view.split || "";
 
   els.statusPill.textContent = view.status;
   els.statusPill.className = `pill ${view.status}`;

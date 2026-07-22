@@ -28,14 +28,35 @@ Contracts on `casper-test`:
 - **Custodian** package: `9342311dc3d948ee673d06942cfcec5935e844a2687df27e8af5d7f7ba7cde02`
 - **X402 data-payment token** (CEP-18): `265ee18c6883e72c6a4ad5ea5a9486f727b57c741f7cd6203c29cbe72b0f59bd`
 
-## 3. Confirm the agent actually reasons (1 min)
+**The feeds are not mocks.** `GET /telemetry?live=1` returns the **real current
+temperature** at the cargo's coordinates from Open-Meteo, behind the same x402
+paywall. Proven live — this settlement
+(`69f2e45b12e7c2cc09f7eb98f295b6675d34b7c986ab1536c7078fb6e87aee8b`) returned
+`{"temp_c":17.8,"source":"open-meteo"}` for Rotterdam. The demo journey stays
+scripted so the narrative is reproducible.
+
+## 3. Fractional ownership, settled pro-rata on-chain (30 s)
+The default run manages a shipment owned by **two investors (60% / 40%)**. When
+the agent distributed the 3.5 CSPR proceeds, the split landed on-chain:
+
+- `distribute` tx: `d1db9e228583a39308614761a0483a17558324808e6609da126475b924b93f32`
+- the 40% investor's account now holds exactly **1.4 CSPR** — check it yourself:
+
+```bash
+curl -s -X POST https://node.testnet.casper.network/rpc -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"query_balance","params":{"purse_identifier":
+      {"main_purse_under_account_hash":"account-hash-eb46ac01d8757f8e09b9fc454aa90ffeb9fc54a267b9775bc4bfa81ee09a4c67"}}}'
+# -> "balance":"1400000000"   (= 40% of the 3.5 CSPR payout)
+```
+
+## 4. Confirm the agent actually reasons (1 min)
 The agent's judgment is **graded** against a hidden answer key — it takes the
 correct on-chain action in each situation and refuses the wrong ones:
 
 - **[`EVAL.md`](EVAL.md) — 6/6 scenarios** (nominal, breach, market move, customs,
   delivery, loss). Reproduce: `cd agent && npm install && npm run build && npm run eval`.
 
-## 4. Run the agent yourself, offline (2 min)
+## 5. Run the agent yourself, offline (2 min)
 Real LLM reasoning over a simulated chain — needs only an OpenRouter key:
 
 ```bash

@@ -91,10 +91,12 @@ impl Scenario for TokenizeMultiScenario {
     ) -> Result<(), Error> {
         let me = env.get_account(0);
         // Second investor: the demo payee account (a real testnet account-hash).
+        // NOTE: `account-hash-` (an account), not `hash-` (which Odra parses as a
+        // CONTRACT address — a payout to that would have no account to credit).
         let payee = Address::from_str(
-            "hash-eb46ac01d8757f8e09b9fc454aa90ffeb9fc54a267b9775bc4bfa81ee09a4c67",
+            "account-hash-eb46ac01d8757f8e09b9fc454aa90ffeb9fc54a267b9775bc4bfa81ee09a4c67",
         )
-        .expect("valid payee address");
+        .expect("valid payee account address");
         let mut custodian = container.contract_ref::<Custodian>(env)?;
         env.set_gas(10_000_000_000);
         custodian
