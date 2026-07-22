@@ -40,7 +40,12 @@ The default run manages a shipment owned by **two investors (60% / 40%)**. When
 the agent distributed the 3.5 CSPR proceeds, the split landed on-chain:
 
 - `distribute` tx: `d1db9e228583a39308614761a0483a17558324808e6609da126475b924b93f32`
-- the 40% investor's account now holds exactly **1.4 CSPR** — check it yourself:
+- the 40% investor's account now holds exactly **1.4 CSPR** — see its balance on
+  the explorer:
+  **https://testnet.cspr.live/account/eb46ac01d8757f8e09b9fc454aa90ffeb9fc54a267b9775bc4bfa81ee09a4c67**
+
+Or query it directly (the public RPC node is occasionally rate-limited — the
+explorer link above is the reliable check):
 
 ```bash
 curl -s -X POST https://node.testnet.casper.network/rpc -H 'Content-Type: application/json' \
