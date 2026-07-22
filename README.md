@@ -89,10 +89,17 @@ and x402 settlements are simulated.
 
 ## Live run (real x402 payments + real on-chain actions)
 
-See `agent/README.md` for the full prerequisites. In short: build `mcp/`, bring
-up the facilitator (:4022) + feed server (:4023)
+See `agent/README.md` for the full prerequisites. The x402 layer builds against
+the third-party casper-x402 SDK, which isn't vendored — clone it once from the
+repo root:
+
+```bash
+git clone https://github.com/make-software/casper-x402 .reference/casper-x402
+```
+
+Then: build `mcp/`, bring up the facilitator (:4022) + feed server (:4023)
 (`x402/feeds/serve-feeds.sh` in a `golang:1.25` container with the ports
-published), tokenize a fresh shipment, then:
+published), tokenize a fresh shipment, and:
 
 ```bash
 cd agent && npm start -- --shipment <id>

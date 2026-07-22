@@ -85,8 +85,20 @@ replace casper_x402_facilitator => ../../.reference/casper-x402
 ```
 
 So the whole project must be mounted at `/work` for the relative path to resolve
-(`/work/.reference/casper-x402` and `/work/x402/feeds` coexist). The reference
-clone is **not** committed; clone it before building (see repo setup).
+(`/work/.reference/casper-x402` and `/work/x402/feeds` coexist).
+
+The reference SDK is a **third-party open-source repo**, so it is not vendored
+here. Clone it once, from the repo root, before building this module:
+
+```bash
+git clone https://github.com/make-software/casper-x402 .reference/casper-x402
+```
+
+Then the Go build resolves normally:
+
+```bash
+docker run --rm -v "$PWD:/work" -w /work/x402/feeds golang:1.25 go build -o /tmp/feeds-server ./server
+```
 
 - `server/` — the x402-gated Gin server (`main.go`, `config.go`, `journey.go`)
 - `client/` — a tiny validation client (free `/health` + two paid calls)
